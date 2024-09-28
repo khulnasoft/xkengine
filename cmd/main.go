@@ -34,7 +34,7 @@ import (
 )
 
 var (
-	kengineVersion     = os.Getenv("KENGINE_VERSION")
+	kengineVersion   = os.Getenv("KENGINE_VERSION")
 	raceDetector     = os.Getenv("XKENGINE_RACE_DETECTOR") == "1"
 	skipBuild        = os.Getenv("XKENGINE_SKIP_BUILD") == "1"
 	skipCleanup      = os.Getenv("XKENGINE_SKIP_CLEANUP") == "1" || skipBuild

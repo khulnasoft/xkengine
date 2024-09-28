@@ -119,14 +119,14 @@ Flags:
 				Cgo: os.Getenv("CGO_ENABLED") == "1",
 			},
 			KengineVersion: kengineVersion,
-			Plugins:      plugins,
-			Replacements: replacements,
-			RaceDetector: raceDetector,
-			SkipBuild:    skipBuild,
-			SkipCleanup:  skipCleanup,
-			Debug:        buildDebugOutput,
-			BuildFlags:   buildFlags,
-			ModFlags:     modFlags,
+			Plugins:        plugins,
+			Replacements:   replacements,
+			RaceDetector:   raceDetector,
+			SkipBuild:      skipBuild,
+			SkipCleanup:    skipCleanup,
+			Debug:          buildDebugOutput,
+			BuildFlags:     buildFlags,
+			ModFlags:       modFlags,
 		}
 		for _, md := range embedDir {
 			if before, after, found := strings.Cut(md, ":"); found {
