@@ -37,16 +37,16 @@ import (
 type Builder struct {
 	Compile
 	KengineVersion string        `json:"kengine_version,omitempty"`
-	Plugins      []Dependency  `json:"plugins,omitempty"`
-	Replacements []Replace     `json:"replacements,omitempty"`
-	TimeoutGet   time.Duration `json:"timeout_get,omitempty"`
-	TimeoutBuild time.Duration `json:"timeout_build,omitempty"`
-	RaceDetector bool          `json:"race_detector,omitempty"`
-	SkipCleanup  bool          `json:"skip_cleanup,omitempty"`
-	SkipBuild    bool          `json:"skip_build,omitempty"`
-	Debug        bool          `json:"debug,omitempty"`
-	BuildFlags   string        `json:"build_flags,omitempty"`
-	ModFlags     string        `json:"mod_flags,omitempty"`
+	Plugins        []Dependency  `json:"plugins,omitempty"`
+	Replacements   []Replace     `json:"replacements,omitempty"`
+	TimeoutGet     time.Duration `json:"timeout_get,omitempty"`
+	TimeoutBuild   time.Duration `json:"timeout_build,omitempty"`
+	RaceDetector   bool          `json:"race_detector,omitempty"`
+	SkipCleanup    bool          `json:"skip_cleanup,omitempty"`
+	SkipBuild      bool          `json:"skip_build,omitempty"`
+	Debug          bool          `json:"debug,omitempty"`
+	BuildFlags     string        `json:"build_flags,omitempty"`
+	ModFlags       string        `json:"mod_flags,omitempty"`
 
 	// Experimental: subject to change
 	EmbedDirs []struct {

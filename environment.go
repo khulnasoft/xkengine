@@ -26,8 +26,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/khulnasoft/xkengine/internal/utils"
 	"github.com/google/shlex"
+	"github.com/khulnasoft/xkengine/internal/utils"
 )
 
 func (b Builder) newEnvironment(ctx context.Context) (*environment, error) {
@@ -122,13 +122,13 @@ func (b Builder) newEnvironment(ctx context.Context) (*environment, error) {
 
 	env := &environment{
 		kengineVersion:    b.KengineVersion,
-		plugins:         b.Plugins,
+		plugins:           b.Plugins,
 		kengineModulePath: kengineModulePath,
-		tempFolder:      tempFolder,
-		timeoutGoGet:    b.TimeoutGet,
-		skipCleanup:     b.SkipCleanup,
-		buildFlags:      b.BuildFlags,
-		modFlags:        b.ModFlags,
+		tempFolder:        tempFolder,
+		timeoutGoGet:      b.TimeoutGet,
+		skipCleanup:       b.SkipCleanup,
+		buildFlags:        b.BuildFlags,
+		modFlags:          b.ModFlags,
 	}
 
 	// initialize the go module
@@ -216,13 +216,13 @@ nextPlugin:
 
 type environment struct {
 	kengineVersion    string
-	plugins         []Dependency
+	plugins           []Dependency
 	kengineModulePath string
-	tempFolder      string
-	timeoutGoGet    time.Duration
-	skipCleanup     bool
-	buildFlags      string
-	modFlags        string
+	tempFolder        string
+	timeoutGoGet      time.Duration
+	skipCleanup       bool
+	buildFlags        string
+	modFlags          string
 }
 
 // Close cleans up the build environment, including deleting
@@ -351,7 +351,7 @@ func (env environment) execGoGet(ctx context.Context, modulePath, moduleVersion,
 
 type goModTemplateContext struct {
 	KengineModule string
-	Plugins     []string
+	Plugins       []string
 }
 
 const mainModuleTemplate = `package main
