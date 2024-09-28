@@ -1,0 +1,120 @@
+version: 2
+
+before:
+  hooks:
+    # The build is done in this particular way to build xkengine in a designated directory named in .gitignore.
+    # This is so we can run goreleaser on tag without Git complaining of being dirty. The main.go in cmd/xkengine directory 
+    # cannot be built within that directory due to changes necessary for the build causing Git to be dirty, which
+    # subsequently causes gorleaser to refuse running.
+    - mkdir -p xkengine-build
+    - cp cmd/xkengine/main.go xkengine-build/main.go
+    - cp ./go.mod xkengine-build/go.mod
+    - sed -i.bkp 's|github.com/khulnasoft/xkengine|xkengine|g' ./xkengine-build/go.mod
+    # GoReleaser doesn't seem to offer {{.Tag}} at this stage, so we have to embed it into the env
+    # so we run: TAG=$(git describe --abbrev=0) goreleaser release --rm-dist --skip-publish --skip-validate
+    - go mod edit -require=github.com/khulnasoft/xkengine@{{.Env.TAG}} ./xkengine-build/go.mod
+    # as of Go 1.16, `go` commands no longer automatically change go.{mod,sum}. We now have to explicitly
+    # run `go mod tidy`. The `/bin/sh -c '...'` is because goreleaser can't find cd in PATH without shell invocation.
+    - /bin/sh -c 'cd ./xkengine-build && go mod tidy'
+    - go mod download
+
+builds:
+- env:
+  - CGO_ENABLED=0
+  main: main.go
+  dir: ./xkengine-build
+  binary: xkengine
+  goos:
+  - darwin
+  - linux
+  - windows
+  - freebsd
+  goarch:
+  - amd64
+  - arm
+  - arm64
+  - s390x
+  - ppc64le
+  - riscv64
+  goarm:
+  - "5"
+  - "6"
+  - "7"
+  ignore:
+    - goos: darwin
+      goarch: arm
+    - goos: darwin
+      goarch: ppc64le
+    - goos: darwin
+      goarch: riscv64
+    - goos: darwin
+      goarch: s390x
+    - goos: windows
+      goarch: ppc64le
+    - goos: windows
+      goarch: riscv64
+    - goos: windows
+      goarch: s390x
+    - goos: freebsd
+      goarch: ppc64le
+    - goos: freebsd
+      goarch: riscv64
+    - goos: freebsd
+      goarch: s390x
+    - goos: freebsd
+      goarch: arm
+      goarm: "5"
+  flags:
+  - -trimpath
+  ldflags:
+  - -s -w
+
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- if eq .Os "darwin" }}mac{{ else }}{{ .Os }}{{ end }}_
+      {{- .Arch }}
+      {{- with .Arm }}v{{ . }}{{ end }}
+      {{- with .Mips }}_{{ . }}{{ end }}
+      {{- if not (eq .Amd64 "v1") }}{{ .Amd64 }}{{ end }}
+
+checksum:
+  algorithm: sha512
+
+nfpms:
+  - id: default
+    package_name: xkengine
+
+    vendor: Dyanim
+    homepage: https://khulnasoft.com
+    maintainer: KhulnaSoft Ltd <nxpkg@users.noreply.github.com>
+    description: |
+      Build Kengine with plugins
+    license: Apache 2.0
+
+    formats:
+      - deb
+      # - rpm
+
+    bindir: /usr/bin
+
+release:
+  github:
+    owner: khulnasoft
+    name: xkengine
+  draft: false
+  prerelease: auto
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^readme:'
+    - '^chore:'
+    - '^ci:'
+    - '^docs?:'
+    - '^tests?:'
